@@ -1,0 +1,17 @@
+{
+  "angularkeycloakApp": {
+    "country": {
+      "home": {
+        "title": "Countries",
+        "refreshListLabel": "Refresh list",
+        "notFound": "No Countries found"
+      },
+      "detail": {
+        "title": "Country"
+      },
+      "id": "ID",
+      "abbreviation": "Abbreviation",
+      "name": "Name"
+    }
+  }
+}

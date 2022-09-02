@@ -18,24 +18,35 @@ export class ProfileService {
       return this.profileInfo$;
     }
 
-    this.profileInfo$ = this.http.get<InfoResponse>(this.infoUrl).pipe(
-      map((response: InfoResponse) => {
-        const profileInfo: ProfileInfo = {
-          activeProfiles: response.activeProfiles,
-          inProduction: response.activeProfiles?.includes('prod'),
-          openAPIEnabled: response.activeProfiles?.includes('api-docs'),
-        };
-        if (response.activeProfiles && response['display-ribbon-on-profiles']) {
-          const displayRibbonOnProfiles = response['display-ribbon-on-profiles'].split(',');
-          const ribbonProfiles = displayRibbonOnProfiles.filter(profile => response.activeProfiles?.includes(profile));
-          if (ribbonProfiles.length > 0) {
-            profileInfo.ribbonEnv = ribbonProfiles[0];
-          }
-        }
-        return profileInfo;
-      }),
-      shareReplay()
-    );
+    // TODO: Check if needed
+    // this.profileInfo$ = this.http.get<InfoResponse>(this.infoUrl).pipe(
+    //   map((response: InfoResponse) => {
+    //     const profileInfo: ProfileInfo = {
+    //       activeProfiles: response.activeProfiles,
+    //       inProduction: response.activeProfiles?.includes('prod'),
+    //       openAPIEnabled: response.activeProfiles?.includes('api-docs'),
+    //     };
+    //     if (response.activeProfiles && response['display-ribbon-on-profiles']) {
+    //       const displayRibbonOnProfiles = response['display-ribbon-on-profiles'].split(',');
+    //       const ribbonProfiles = displayRibbonOnProfiles.filter(profile => response.activeProfiles?.includes(profile));
+    //       if (ribbonProfiles.length > 0) {
+    //         profileInfo.ribbonEnv = ribbonProfiles[0];
+    //       }
+    //     }
+    //     return profileInfo;
+    //   }),
+    //   shareReplay()
+    // );
+    this.profileInfo$ = new Observable(observer => {
+      const profileInfo: ProfileInfo = {
+        activeProfiles: ['dev'],
+        inProduction: false,
+        openAPIEnabled: false,
+      };
+      observer.next(profileInfo);
+      observer.complete();
+    });
+
     return this.profileInfo$;
   }
 }

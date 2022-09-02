@@ -77,7 +77,22 @@ export class AccountService {
   }
 
   private fetch(): Observable<Account> {
-    return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
+    // TODO: Replace this logic
+    return new Observable(observer => {
+      const account2: Account = {
+        activated: true,
+        authorities: ['manager'],
+        email: 'manager@example.com',
+        firstName: null,
+        langKey: 'en',
+        lastName: null,
+        login: 'manager',
+        imageUrl: null,
+      };
+      observer.next(account2);
+      observer.complete();
+    });
+    // return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
   }
 
   private navigateToStoredUrl(): void {
