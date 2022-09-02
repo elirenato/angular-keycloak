@@ -11,7 +11,7 @@
     }
   ],
   "name": "Country",
-  "pagination": "pagination",
+  "pagination": "no",
   "readOnly": true,
   "relationships": [],
   "skipServer": true

@@ -24,6 +24,8 @@ export class CountryService {
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
+    console.warn('#### query backend');
+    console.warn(this.resourceUrl);
     return this.http.get<ICountry[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
