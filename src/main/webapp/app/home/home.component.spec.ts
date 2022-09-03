@@ -9,12 +9,15 @@ import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 
 import { HomeComponent } from './home.component';
+import { KeycloakService } from 'keycloak-angular';
 
 describe('Home Component', () => {
   let comp: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let mockAccountService: AccountService;
   let mockRouter: Router;
+  let mockKeycloakService: KeycloakService;
+
   const account: Account = {
     activated: true,
     authorities: [],
@@ -30,7 +33,7 @@ describe('Home Component', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [HomeComponent],
-      providers: [AccountService],
+      providers: [AccountService, KeycloakService],
     })
       .overrideTemplate(HomeComponent, '')
       .compileComponents();
@@ -39,6 +42,9 @@ describe('Home Component', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);
     comp = fixture.componentInstance;
+
+    mockKeycloakService = TestBed.inject(KeycloakService);
+
     mockAccountService = TestBed.inject(AccountService);
     mockAccountService.identity = jest.fn(() => of(null));
     mockAccountService.getAuthenticationState = jest.fn(() => of(null));

@@ -9,6 +9,7 @@ import { shareReplay, tap, catchError } from 'rxjs/operators';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { ApplicationConfigService } from '../config/application-config.service';
 import { Account } from 'app/core/auth/account.model';
+import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -22,7 +23,8 @@ export class AccountService {
     private http: HttpClient,
     private stateStorageService: StateStorageService,
     private router: Router,
-    private applicationConfigService: ApplicationConfigService
+    private applicationConfigService: ApplicationConfigService,
+    private keycloakService: KeycloakService
   ) {}
 
   save(account: Account): Observable<{}> {
@@ -77,22 +79,22 @@ export class AccountService {
   }
 
   private fetch(): Observable<Account> {
-    // TODO: Replace this logic
     return new Observable(observer => {
-      const account2: Account = {
-        activated: true,
-        authorities: ['manager'],
-        email: 'manager@example.com',
-        firstName: null,
-        langKey: 'en',
-        lastName: null,
-        login: 'manager',
-        imageUrl: null,
-      };
-      observer.next(account2);
-      observer.complete();
+      this.keycloakService.loadUserProfile().then(profile => {
+        const account: Account = {
+          activated: profile.emailVerified === true,
+          authorities: this.keycloakService.getUserRoles(),
+          email: String(profile.email),
+          firstName: String(profile.firstName),
+          langKey: 'en',
+          lastName: String(profile.lastName),
+          login: String(profile.username),
+          imageUrl: null,
+        };
+        observer.next(account);
+        observer.complete();
+      });
     });
-    // return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
   }
 
   private navigateToStoredUrl(): void {

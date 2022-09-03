@@ -22,7 +22,6 @@ import { httpInterceptorProviders } from 'app/core/interceptor/index';
 import { MainComponent } from './layouts/main/main.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
-import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
@@ -38,17 +37,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
       initOptions: {
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri: window.location.origin + '/content/silent-check-sso.html',
-      },
-      shouldAddToken(request) {
-        // TODO: Check if needed
-        // const { method, url } = request;
-
-        // const isGetRequest = 'GET' === method.toUpperCase();
-        // const acceptablePaths = ['/content'];
-        // const isAcceptablePathMatch = urls.some((path) => url.includes(path));
-
-        // return !(isGetRequest && isAcceptablePathMatch);
-        return true;
       },
     });
 }
@@ -79,7 +67,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
       deps: [KeycloakService],
     },
   ],
-  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, ActiveMenuDirective, FooterComponent],
   bootstrap: [MainComponent],
 })
 export class AppModule {

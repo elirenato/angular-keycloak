@@ -48,9 +48,8 @@
     "messages": {
       "info": {
         "authenticated": {
-          "prefix": "Se deseja ",
-          "link": "entrar",
-          "suffix": ", utilize as seguintes contas padrões:<br/>- Administrador (usuário=\"admin\" and senha=\"admin\") <br/>- Usuário (usuário=\"user\" e senha=\"user\")."
+          "prefix": "Se deseja logar-se, click ",
+          "link": "aqui"
         },
         "register": {
           "noaccount": "Não possui uma conta ainda?",
@@ -82,9 +81,6 @@
     },
     "field": {
       "id": "Código"
-    },
-    "ribbon": {
-      "dev": "Desenvolvimento"
     },
     "item-count": "Mostrando {{first}} - {{second}} de {{total}} resultados."
   },
