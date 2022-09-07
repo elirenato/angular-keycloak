@@ -15,8 +15,7 @@ export class LoginService {
   }
 
   logout(): void {
-    this.keycloakService.logout().then(() => {
-      this.accountService.authenticate(null);
-    });
+    this.keycloakService.logout();
+    this.accountService.authenticate(null);
   }
 }

@@ -16,7 +16,7 @@ describe('Home Component', () => {
   let fixture: ComponentFixture<HomeComponent>;
   let mockAccountService: AccountService;
   let mockRouter: Router;
-  let mockKeycloakService: KeycloakService;
+  let keycloakService: KeycloakService;
 
   const account: Account = {
     activated: true,
@@ -43,7 +43,9 @@ describe('Home Component', () => {
     fixture = TestBed.createComponent(HomeComponent);
     comp = fixture.componentInstance;
 
-    mockKeycloakService = TestBed.inject(KeycloakService);
+    keycloakService = TestBed.inject(KeycloakService);
+    jest.spyOn(keycloakService, 'login').mockReturnValue(Promise.resolve());
+    jest.spyOn(keycloakService, 'register').mockReturnValue(Promise.resolve());
 
     mockAccountService = TestBed.inject(AccountService);
     mockAccountService.identity = jest.fn(() => of(null));
@@ -79,13 +81,21 @@ describe('Home Component', () => {
     });
   });
 
-  describe('login', () => {
-    it('Should navigate to /login on login', () => {
+  describe('auth logic', () => {
+    it('Should call Keycloak login', () => {
       // WHEN
       comp.login();
 
       // THEN
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login']);
+      expect(keycloakService.login).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should call Keycloak register', () => {
+      // WHEN
+      comp.register();
+
+      // THEN
+      expect(keycloakService.register).toHaveBeenCalledTimes(1);
     });
   });
 

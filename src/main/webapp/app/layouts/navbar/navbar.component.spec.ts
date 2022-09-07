@@ -9,13 +9,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
-
 import { NavbarComponent } from './navbar.component';
+import { KeycloakService } from 'keycloak-angular';
 
 describe('Navbar Component', () => {
   let comp: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let accountService: AccountService;
+  let loginService: LoginService;
   const account: Account = {
     activated: true,
     authorities: [],
@@ -31,7 +32,7 @@ describe('Navbar Component', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), TranslateModule.forRoot(), NgxWebstorageModule.forRoot()],
       declarations: [NavbarComponent],
-      providers: [LoginService],
+      providers: [LoginService, KeycloakService],
     })
       .overrideTemplate(NavbarComponent, '')
       .compileComponents();
@@ -40,6 +41,12 @@ describe('Navbar Component', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NavbarComponent);
     comp = fixture.componentInstance;
+
+    loginService = TestBed.inject(LoginService);
+    jest.spyOn(loginService, 'login');
+    jest.spyOn(loginService, 'register');
+    jest.spyOn(loginService, 'logout');
+
     accountService = TestBed.inject(AccountService);
   });
 
@@ -78,5 +85,34 @@ describe('Navbar Component', () => {
 
     // THEN
     expect(comp.account).toBeNull();
+  });
+
+  it('Should call login', () => {
+    // WHEN
+    comp.login();
+
+    // THEN
+    expect(loginService.login).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should call register', () => {
+    // WHEN
+    comp.register();
+
+    // THEN
+    expect(loginService.register).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should call logout', () => {
+    comp.isNavbarCollapsed = false;
+
+    // WHEN
+    comp.logout();
+
+    // THEN
+    expect(loginService.logout).toHaveBeenCalledTimes(1);
+
+    // THEN
+    expect(comp.isNavbarCollapsed).toBeTruthy();
   });
 });

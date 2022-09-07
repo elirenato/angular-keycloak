@@ -78,6 +78,7 @@ export class AccountService {
     return this.authenticationState.asObservable();
   }
 
+  //
   private fetch(): Observable<Account> {
     return new Observable(observer => {
       this.keycloakService.loadUserProfile().then(profile => {
