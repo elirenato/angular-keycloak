@@ -1,6 +1,11 @@
-# angularkeycloak
+# Angular Keycloak
 
-This application was generated using JHipster 7.9.2, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.9.2](https://www.jhipster.tech/documentation-archive/v7.9.2).
+This application was initially generated using JHipster 7.9.2 with `jhipster --skip-server`.
+
+After that, a lot of customizations have been done in the authentication components to integrate with Keycloak using
+the [https://www.npmjs.com/package/keycloak-angular](Angular Keycloak library).
+
+PS: The backend side of this application is [https://github.com/elirenato/secure-api-quarkus](https://github.com/elirenato/secure-api-quarkus).
 
 ## Project Structure
 

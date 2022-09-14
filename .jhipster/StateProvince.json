@@ -1,0 +1,25 @@
+{
+  "changelogDate": "20220914023237",
+  "fields": [
+    {
+      "fieldName": "abbreviation",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    }
+  ],
+  "name": "StateProvince",
+  "pagination": "no",
+  "readOnly": true,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "country",
+      "relationshipName": "country",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "skipServer": true
+}
