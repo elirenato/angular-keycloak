@@ -9,6 +9,7 @@
         "main": "Entidades",
         "country": "Country",
         "stateProvince": "State Province",
+        "customer": "Customer",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

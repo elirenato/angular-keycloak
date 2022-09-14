@@ -18,6 +18,11 @@ import { Authority } from '../config/authority.constants';
         data: { pageTitle: 'angularkeycloakApp.stateProvince.home.title' },
         loadChildren: () => import('./state-province/state-province.module').then(m => m.StateProvinceModule),
       },
+      {
+        path: 'customer',
+        data: { pageTitle: 'angularkeycloakApp.customer.home.title' },
+        loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

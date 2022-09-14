@@ -35,25 +35,4 @@ export class StateProvinceService {
     return o1 && o2 ? this.getStateProvinceIdentifier(o1) === this.getStateProvinceIdentifier(o2) : o1 === o2;
   }
 
-  addStateProvinceToCollectionIfMissing<Type extends Pick<IStateProvince, 'id'>>(
-    stateProvinceCollection: Type[],
-    ...stateProvincesToCheck: (Type | null | undefined)[]
-  ): Type[] {
-    const stateProvinces: Type[] = stateProvincesToCheck.filter(isPresent);
-    if (stateProvinces.length > 0) {
-      const stateProvinceCollectionIdentifiers = stateProvinceCollection.map(
-        stateProvinceItem => this.getStateProvinceIdentifier(stateProvinceItem)!
-      );
-      const stateProvincesToAdd = stateProvinces.filter(stateProvinceItem => {
-        const stateProvinceIdentifier = this.getStateProvinceIdentifier(stateProvinceItem);
-        if (stateProvinceCollectionIdentifiers.includes(stateProvinceIdentifier)) {
-          return false;
-        }
-        stateProvinceCollectionIdentifiers.push(stateProvinceIdentifier);
-        return true;
-      });
-      return [...stateProvincesToAdd, ...stateProvinceCollection];
-    }
-    return stateProvinceCollection;
-  }
 }
