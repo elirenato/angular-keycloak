@@ -41,13 +41,13 @@
         <dt><span jhiTranslate="angularkeycloakApp.customer.country">Country</span></dt>
         <dd>
           <div *ngIf="customer.country">
-            <span>{{ customer.country?.name }}</span>
+            <span>{{ customer.country.name }}</span>
           </div>
         </dd>
         <dt><span jhiTranslate="angularkeycloakApp.customer.stateProvince">State Province</span></dt>
         <dd>
           <div *ngIf="customer.stateProvince">
-            <span>{{ customer.stateProvince?.name }}</span>
+            <span>{{ customer.stateProvince.name }}</span>
           </div>
         </dd>
       </dl>

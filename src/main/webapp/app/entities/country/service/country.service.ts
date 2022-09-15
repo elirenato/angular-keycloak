@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import { ICountry, NewCountry } from '../country.model';
+import { ICountry } from '../country.model';
 
 export type PartialUpdateCountry = Partial<ICountry> & Pick<ICountry, 'id'>;
 

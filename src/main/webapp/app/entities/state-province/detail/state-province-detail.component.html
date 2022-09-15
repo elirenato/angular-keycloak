@@ -27,7 +27,7 @@
         <dt><span jhiTranslate="angularkeycloakApp.stateProvince.country">Country</span></dt>
         <dd>
           <div *ngIf="stateProvince.country">
-            <a [routerLink]="['/country', stateProvince.country.id, 'view']">{{ stateProvince.country?.name }}</a>
+            <a [routerLink]="['/country', stateProvince.country.id, 'view']">{{ stateProvince.country.name }}</a>
           </div>
         </dd>
       </dl>

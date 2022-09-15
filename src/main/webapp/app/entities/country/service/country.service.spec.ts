@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { ICountry } from '../country.model';
-import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../country.test-samples';
+import { sampleWithRequiredData, sampleWithPartialData, sampleWithFullData } from '../country.test-samples';
 
 import { CountryService } from './country.service';
 

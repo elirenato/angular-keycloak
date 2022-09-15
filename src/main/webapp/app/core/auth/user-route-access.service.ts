@@ -10,12 +10,12 @@ import { firstValueFrom, map, Observable } from 'rxjs';
 })
 export class UserRouteAccessService extends KeycloakAuthGuard {
   constructor(
-    override readonly router: Router,
-    readonly keycloak: KeycloakService,
+    protected router: Router,
+    protected keycloakAngular: KeycloakService,
     private stateStorageService: StateStorageService,
     private accountService: AccountService
   ) {
-    super(router, keycloak);
+    super(router, keycloakAngular);
   }
 
   hasRole(route: ActivatedRouteSnapshot): Observable<boolean> {
@@ -38,7 +38,7 @@ export class UserRouteAccessService extends KeycloakAuthGuard {
     // Force the user to log in if currently unauthenticated.
     if (!this.authenticated) {
       this.stateStorageService.storeUrl(state.url);
-      await this.keycloak.login({
+      await this.keycloakAngular.login({
         redirectUri: window.location.origin + state.url,
       });
     }

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { IStateProvince } from '../state-province.model';
-import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../state-province.test-samples';
+import { sampleWithRequiredData } from '../state-province.test-samples';
 
 import { StateProvinceService } from './state-province.service';
 
@@ -47,64 +47,6 @@ describe('StateProvince Service', () => {
       req.flush([returnedFromService]);
       httpMock.verify();
       expect(expectedResult).toMatchObject([expected]);
-    });
-
-    describe('addStateProvinceToCollectionIfMissing', () => {
-      it('should add a StateProvince to an empty array', () => {
-        const stateProvince: IStateProvince = sampleWithRequiredData;
-        expectedResult = service.addStateProvinceToCollectionIfMissing([], stateProvince);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(stateProvince);
-      });
-
-      it('should not add a StateProvince to an array that contains it', () => {
-        const stateProvince: IStateProvince = sampleWithRequiredData;
-        const stateProvinceCollection: IStateProvince[] = [
-          {
-            ...stateProvince,
-          },
-          sampleWithPartialData,
-        ];
-        expectedResult = service.addStateProvinceToCollectionIfMissing(stateProvinceCollection, stateProvince);
-        expect(expectedResult).toHaveLength(2);
-      });
-
-      it("should add a StateProvince to an array that doesn't contain it", () => {
-        const stateProvince: IStateProvince = sampleWithRequiredData;
-        const stateProvinceCollection: IStateProvince[] = [sampleWithPartialData];
-        expectedResult = service.addStateProvinceToCollectionIfMissing(stateProvinceCollection, stateProvince);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(stateProvince);
-      });
-
-      it('should add only unique StateProvince to an array', () => {
-        const stateProvinceArray: IStateProvince[] = [sampleWithRequiredData, sampleWithPartialData, sampleWithFullData];
-        const stateProvinceCollection: IStateProvince[] = [sampleWithRequiredData];
-        expectedResult = service.addStateProvinceToCollectionIfMissing(stateProvinceCollection, ...stateProvinceArray);
-        expect(expectedResult).toHaveLength(3);
-      });
-
-      it('should accept varargs', () => {
-        const stateProvince: IStateProvince = sampleWithRequiredData;
-        const stateProvince2: IStateProvince = sampleWithPartialData;
-        expectedResult = service.addStateProvinceToCollectionIfMissing([], stateProvince, stateProvince2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(stateProvince);
-        expect(expectedResult).toContain(stateProvince2);
-      });
-
-      it('should accept null and undefined values', () => {
-        const stateProvince: IStateProvince = sampleWithRequiredData;
-        expectedResult = service.addStateProvinceToCollectionIfMissing([], null, stateProvince, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(stateProvince);
-      });
-
-      it('should return initial array if no StateProvince is added', () => {
-        const stateProvinceCollection: IStateProvince[] = [sampleWithRequiredData];
-        expectedResult = service.addStateProvinceToCollectionIfMissing(stateProvinceCollection, undefined, null);
-        expect(expectedResult).toEqual(stateProvinceCollection);
-      });
     });
 
     describe('compareStateProvince', () => {

@@ -6,18 +6,17 @@
       <div class="p-2">
         <select class="form-control"
               [disabled]="isLoading"
-              [(ngModel)]="countrySelected"
-              (change)="load()"
-              [compareWith]="compareCountry"
+              [(ngModel)]="countryID"
+              (change)="navigateToWithComponentValues()"
             >
-              <option [ngValue]="null" selected>Choose a country</option>
-              <option [ngValue]="countryOption" *ngFor="let countryOption of countries">
+              <option [ngValue]="null" selected disabled>Choose a country</option>
+              <option [ngValue]="countryOption.id" *ngFor="let countryOption of countries">
                 {{ countryOption.name }}
               </option>
         </select>
       </div>
       <div class="p-2">
-        <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <button class="btn btn-info me-2" (click)="loadStateProvinces()" [disabled]="isLoading">
           <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
           <span jhiTranslate="angularkeycloakApp.stateProvince.home.refreshListLabel">Refresh list</span>
         </button>
@@ -36,13 +35,13 @@
   <div class="table-responsive" id="entities" *ngIf="stateProvinces && stateProvinces.length > 0">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr>
-          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
-          <th scope="col">
-            <span jhiTranslate="angularkeycloakApp.stateProvince.abbreviation">Abbreviation</span>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="abbreviation">
+            <span jhiTranslate="angularkeycloakApp.stateProvince.abbreviation">Abbreviation</span> <fa-icon icon="sort"></fa-icon>
           </th>
-          <th scope="col">
-            <span jhiTranslate="angularkeycloakApp.stateProvince.name">Name</span>
+          <th scope="col" jhiSortBy="name">
+            <span jhiTranslate="angularkeycloakApp.stateProvince.name">Name</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col">
             <span jhiTranslate="angularkeycloakApp.stateProvince.country">Country</span>
@@ -59,7 +58,7 @@
           <td>{{ stateProvince.name }}</td>
           <td>
             <div *ngIf="stateProvince.country">
-              <a [routerLink]="['/country', stateProvince.country.id, 'view']">{{ stateProvince.country?.name }}</a>
+              <a [routerLink]="['/country', stateProvince.country.id, 'view']">{{ stateProvince.country.name }}</a>
             </div>
           </td>
           <td class="text-end">

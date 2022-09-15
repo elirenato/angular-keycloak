@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpResponse } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -13,6 +13,7 @@ import { IStateProvince } from 'app/entities/state-province/state-province.model
 import { StateProvinceService } from 'app/entities/state-province/service/state-province.service';
 
 import { CustomerUpdateComponent } from './customer-update.component';
+import { ICountry } from '../../country/country.model';
 
 describe('Customer Management Update Component', () => {
   let comp: CustomerUpdateComponent;
@@ -45,41 +46,33 @@ describe('Customer Management Update Component', () => {
     customerService = TestBed.inject(CustomerService);
     stateProvinceService = TestBed.inject(StateProvinceService);
 
+    const headers = new HttpHeaders();
+    const country: ICountry = { id: 456 };
+    const stateProvince: IStateProvince = { id: 20386, country };
+
+    jest.spyOn(stateProvinceService, 'query').mockReturnValue(
+      of(
+        new HttpResponse({
+          body: [stateProvince],
+          headers,
+        })
+      )
+    );
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call StateProvince query and add missing value', () => {
-      const customer: ICustomer = { id: 456 };
-      const stateProvince: IStateProvince = { id: 71372 };
-      customer.stateProvince = stateProvince;
-
-      const stateProvinceCollection: IStateProvince[] = [{ id: 35054 }];
-      jest.spyOn(stateProvinceService, 'query').mockReturnValue(of(new HttpResponse({ body: stateProvinceCollection })));
-      const additionalStateProvinces = [stateProvince];
-      const expectedCollection: IStateProvince[] = [...additionalStateProvinces, ...stateProvinceCollection];
-      jest.spyOn(stateProvinceService, 'addStateProvinceToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ customer });
-      comp.ngOnInit();
-
-      expect(stateProvinceService.query).toHaveBeenCalled();
-      expect(stateProvinceService.addStateProvinceToCollectionIfMissing).toHaveBeenCalledWith(
-        stateProvinceCollection,
-        ...additionalStateProvinces.map(expect.objectContaining)
-      );
-      expect(comp.stateProvincesSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should update editForm', () => {
       const customer: ICustomer = { id: 456 };
-      const stateProvince: IStateProvince = { id: 20386 };
+      const country: ICountry = { id: 456 };
+      const stateProvince: IStateProvince = { id: 20386, country };
+
       customer.stateProvince = stateProvince;
 
       activatedRoute.data = of({ customer });
       comp.ngOnInit();
 
-      expect(comp.stateProvincesSharedCollection).toContain(stateProvince);
+      expect(comp.stateProvincesSharedCollection).toContainEqual(stateProvince);
       expect(comp.customer).toEqual(customer);
     });
   });

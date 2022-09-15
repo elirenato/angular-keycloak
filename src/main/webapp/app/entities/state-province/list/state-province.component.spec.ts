@@ -8,11 +8,13 @@ import { of } from 'rxjs';
 import { StateProvinceService } from '../service/state-province.service';
 
 import { StateProvinceComponent } from './state-province.component';
+import { CountryService } from '../../country/service/country.service';
 
 describe('StateProvince Management Component', () => {
   let comp: StateProvinceComponent;
   let fixture: ComponentFixture<StateProvinceComponent>;
   let service: StateProvinceService;
+  let countryService: CountryService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -30,6 +32,7 @@ describe('StateProvince Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
+                country: '456'
               })
             ),
             snapshot: { queryParams: {} },
@@ -43,6 +46,7 @@ describe('StateProvince Management Component', () => {
     fixture = TestBed.createComponent(StateProvinceComponent);
     comp = fixture.componentInstance;
     service = TestBed.inject(StateProvinceService);
+    countryService = TestBed.inject(CountryService);
 
     const headers = new HttpHeaders();
     jest.spyOn(service, 'query').mockReturnValue(
@@ -53,14 +57,26 @@ describe('StateProvince Management Component', () => {
         })
       )
     );
+
+    jest.spyOn(countryService, 'query').mockReturnValue(
+      of(
+        new HttpResponse({
+          body: [{ id: 456 }],
+          headers,
+        })
+      )
+    );
   });
 
-  it('Should call load all on init', () => {
+  it('Should call load countries on init and states when country', () => {
     // WHEN
     comp.ngOnInit();
 
     // THEN
-    expect(service.query).toHaveBeenCalled();
+    expect(countryService.query).toHaveBeenCalled();
+    expect(comp.countries[0]).toEqual(expect.objectContaining({ id: 456 }));
+
+    expect(countryService.query).toHaveBeenCalled();
     expect(comp.stateProvinces?.[0]).toEqual(expect.objectContaining({ id: 123 }));
   });
 

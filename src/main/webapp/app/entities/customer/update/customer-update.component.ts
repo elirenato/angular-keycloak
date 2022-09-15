@@ -98,16 +98,15 @@ export class CustomerUpdateComponent implements OnInit {
   }
 
   protected loadStateProvinces(): void {
-    console.warn( '### loadStateProvinces ###' );
     const country = this.editForm.get('country')!.value;
-    console.warn( '## country ##' );
-    console.warn( country );
     this.stateProvincesSharedCollection = [];
     this.stateProvinceService
       .query({
         country: country?.id
       })
       .pipe(map((res: HttpResponse<IStateProvince[]>) => res.body ?? []))
-      .subscribe((stateProvinces: IStateProvince[]) => (this.stateProvincesSharedCollection = stateProvinces));
+      .subscribe((stateProvinces: IStateProvince[]) => {
+        this.stateProvincesSharedCollection = stateProvinces;
+      });
   }
 }
