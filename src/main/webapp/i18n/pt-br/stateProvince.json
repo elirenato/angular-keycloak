@@ -1,0 +1,18 @@
+{
+  "angularkeycloakApp": {
+    "stateProvince": {
+      "home": {
+        "title": "State Provinces",
+        "refreshListLabel": "Atualizar lista",
+        "notFound": "Nenhum State Province encontrado"
+      },
+      "detail": {
+        "title": "State Province"
+      },
+      "id": "ID",
+      "abbreviation": "Abbreviation",
+      "name": "Name",
+      "country": "Country"
+    }
+  }
+}

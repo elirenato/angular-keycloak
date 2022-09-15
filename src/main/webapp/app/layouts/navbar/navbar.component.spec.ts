@@ -3,23 +3,20 @@ jest.mock('app/login/login.service');
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ProfileInfo } from 'app/layouts/profiles/profile-info.model';
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { LoginService } from 'app/login/login.service';
-
 import { NavbarComponent } from './navbar.component';
+import { KeycloakService } from 'keycloak-angular';
 
 describe('Navbar Component', () => {
   let comp: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let accountService: AccountService;
-  let profileService: ProfileService;
+  let loginService: LoginService;
   const account: Account = {
     activated: true,
     authorities: [],
@@ -35,7 +32,7 @@ describe('Navbar Component', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), TranslateModule.forRoot(), NgxWebstorageModule.forRoot()],
       declarations: [NavbarComponent],
-      providers: [LoginService],
+      providers: [LoginService, KeycloakService],
     })
       .overrideTemplate(NavbarComponent, '')
       .compileComponents();
@@ -44,19 +41,13 @@ describe('Navbar Component', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NavbarComponent);
     comp = fixture.componentInstance;
+
+    loginService = TestBed.inject(LoginService);
+    jest.spyOn(loginService, 'login');
+    jest.spyOn(loginService, 'register');
+    jest.spyOn(loginService, 'logout');
+
     accountService = TestBed.inject(AccountService);
-    profileService = TestBed.inject(ProfileService);
-  });
-
-  it('Should call profileService.getProfileInfo on init', () => {
-    // GIVEN
-    jest.spyOn(profileService, 'getProfileInfo').mockReturnValue(of(new ProfileInfo()));
-
-    // WHEN
-    comp.ngOnInit();
-
-    // THEN
-    expect(profileService.getProfileInfo).toHaveBeenCalled();
   });
 
   it('Should hold current authenticated user in variable account', () => {
@@ -94,5 +85,34 @@ describe('Navbar Component', () => {
 
     // THEN
     expect(comp.account).toBeNull();
+  });
+
+  it('Should call login', () => {
+    // WHEN
+    comp.login();
+
+    // THEN
+    expect(loginService.login).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should call register', () => {
+    // WHEN
+    comp.register();
+
+    // THEN
+    expect(loginService.register).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should call logout', () => {
+    comp.isNavbarCollapsed = false;
+
+    // WHEN
+    comp.logout();
+
+    // THEN
+    expect(loginService.logout).toHaveBeenCalledTimes(1);
+
+    // THEN
+    expect(comp.isNavbarCollapsed).toBeTruthy();
   });
 });

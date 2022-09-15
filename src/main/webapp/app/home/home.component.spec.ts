@@ -9,12 +9,15 @@ import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 
 import { HomeComponent } from './home.component';
+import { KeycloakService } from 'keycloak-angular';
 
 describe('Home Component', () => {
   let comp: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let mockAccountService: AccountService;
   let mockRouter: Router;
+  let keycloakService: KeycloakService;
+
   const account: Account = {
     activated: true,
     authorities: [],
@@ -30,7 +33,7 @@ describe('Home Component', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes([])],
       declarations: [HomeComponent],
-      providers: [AccountService],
+      providers: [AccountService, KeycloakService],
     })
       .overrideTemplate(HomeComponent, '')
       .compileComponents();
@@ -39,6 +42,11 @@ describe('Home Component', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);
     comp = fixture.componentInstance;
+
+    keycloakService = TestBed.inject(KeycloakService);
+    jest.spyOn(keycloakService, 'login').mockReturnValue(Promise.resolve());
+    jest.spyOn(keycloakService, 'register').mockReturnValue(Promise.resolve());
+
     mockAccountService = TestBed.inject(AccountService);
     mockAccountService.identity = jest.fn(() => of(null));
     mockAccountService.getAuthenticationState = jest.fn(() => of(null));
@@ -73,13 +81,21 @@ describe('Home Component', () => {
     });
   });
 
-  describe('login', () => {
-    it('Should navigate to /login on login', () => {
+  describe('auth logic', () => {
+    it('Should call Keycloak login', () => {
       // WHEN
       comp.login();
 
       // THEN
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login']);
+      expect(keycloakService.login).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should call Keycloak register', () => {
+      // WHEN
+      comp.register();
+
+      // THEN
+      expect(keycloakService.register).toHaveBeenCalledTimes(1);
     });
   });
 

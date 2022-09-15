@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="stateProvince">
+      <h2 data-cy="stateProvinceDetailsHeading">
+        <span jhiTranslate="angularkeycloakApp.stateProvince.detail.title">State Province</span>
+      </h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ stateProvince.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="angularkeycloakApp.stateProvince.abbreviation">Abbreviation</span></dt>
+        <dd>
+          <span>{{ stateProvince.abbreviation }}</span>
+        </dd>
+        <dt><span jhiTranslate="angularkeycloakApp.stateProvince.name">Name</span></dt>
+        <dd>
+          <span>{{ stateProvince.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="angularkeycloakApp.stateProvince.country">Country</span></dt>
+        <dd>
+          <div *ngIf="stateProvince.country">
+            <a [routerLink]="['/country', stateProvince.country.id, 'view']">{{ stateProvince.country.name }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+    </div>
+  </div>
+</div>

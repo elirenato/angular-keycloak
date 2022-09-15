@@ -1,0 +1,81 @@
+<div>
+  <h2 id="page-heading" data-cy="StateProvinceHeading">
+    <span jhiTranslate="angularkeycloakApp.stateProvince.home.title">State Provinces</span>
+
+    <div class="d-flex justify-content-start">
+      <div class="p-2">
+        <select class="form-control"
+              [disabled]="isLoading"
+              [(ngModel)]="countryID"
+              (change)="navigateToWithComponentValues()"
+            >
+              <option [ngValue]="null" selected disabled>Choose a country</option>
+              <option [ngValue]="countryOption.id" *ngFor="let countryOption of countries">
+                {{ countryOption.name }}
+              </option>
+        </select>
+      </div>
+      <div class="p-2">
+        <button class="btn btn-info me-2" (click)="loadStateProvinces()" [disabled]="isLoading">
+          <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+          <span jhiTranslate="angularkeycloakApp.stateProvince.home.refreshListLabel">Refresh list</span>
+        </button>
+      </div>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="stateProvinces?.length === 0">
+    <span jhiTranslate="angularkeycloakApp.stateProvince.home.notFound">No State Provinces found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="stateProvinces && stateProvinces.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="abbreviation">
+            <span jhiTranslate="angularkeycloakApp.stateProvince.abbreviation">Abbreviation</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <span jhiTranslate="angularkeycloakApp.stateProvince.name">Name</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col">
+            <span jhiTranslate="angularkeycloakApp.stateProvince.country">Country</span>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stateProvince of stateProvinces; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/state-province', stateProvince.id, 'view']">{{ stateProvince.id }}</a>
+          </td>
+          <td>{{ stateProvince.abbreviation }}</td>
+          <td>{{ stateProvince.name }}</td>
+          <td>
+            <div *ngIf="stateProvince.country">
+              <a [routerLink]="['/country', stateProvince.country.id, 'view']">{{ stateProvince.country.name }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/state-province', stateProvince.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

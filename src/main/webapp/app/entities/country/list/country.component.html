@@ -1,0 +1,59 @@
+<div>
+  <h2 id="page-heading" data-cy="CountryHeading">
+    <span jhiTranslate="angularkeycloakApp.country.home.title">Countries</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="angularkeycloakApp.country.home.refreshListLabel">Refresh list</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="countries?.length === 0">
+    <span jhiTranslate="angularkeycloakApp.country.home.notFound">No Countries found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="countries && countries.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="abbreviation">
+            <span jhiTranslate="angularkeycloakApp.country.abbreviation">Abbreviation</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <span jhiTranslate="angularkeycloakApp.country.name">Name</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let country of countries; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/country', country.id, 'view']">{{ country.id }}</a>
+          </td>
+          <td>{{ country.abbreviation }}</td>
+          <td>{{ country.name }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/country', country.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

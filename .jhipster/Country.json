@@ -1,0 +1,18 @@
+{
+  "changelogDate": "20220902011224",
+  "fields": [
+    {
+      "fieldName": "abbreviation",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Country",
+  "pagination": "no",
+  "readOnly": true,
+  "relationships": [],
+  "skipServer": true
+}

@@ -1,36 +1,47 @@
-import { Injectable, isDevMode } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { AccountService } from 'app/core/auth/account.service';
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 import { StateStorageService } from './state-storage.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { firstValueFrom, map, Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class UserRouteAccessService implements CanActivate {
-  constructor(private router: Router, private accountService: AccountService, private stateStorageService: StateStorageService) {}
+@Injectable({
+  providedIn: 'root',
+})
+export class UserRouteAccessService extends KeycloakAuthGuard {
+  constructor(
+    protected router: Router,
+    protected keycloakAngular: KeycloakService,
+    private stateStorageService: StateStorageService,
+    private accountService: AccountService
+  ) {
+    super(router, keycloakAngular);
+  }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  hasRole(route: ActivatedRouteSnapshot): Observable<boolean> {
     return this.accountService.identity().pipe(
       map(account => {
         if (account) {
           const authorities = route.data['authorities'];
-
           if (!authorities || authorities.length === 0 || this.accountService.hasAnyAuthority(authorities)) {
             return true;
-          }
-
-          if (isDevMode()) {
-            console.error('User has not any of required authorities: ', authorities);
           }
           this.router.navigate(['accessdenied']);
           return false;
         }
-
-        this.stateStorageService.storeUrl(state.url);
-        this.router.navigate(['/login']);
         return false;
       })
     );
+  }
+
+  public async isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    // Force the user to log in if currently unauthenticated.
+    if (!this.authenticated) {
+      this.stateStorageService.storeUrl(state.url);
+      await this.keycloakAngular.login({
+        redirectUri: window.location.origin + state.url,
+      });
+    }
+    return firstValueFrom(this.hasRole(route));
   }
 }
