@@ -15,7 +15,7 @@ import { KeycloakService } from 'keycloak-angular';
 export class AccountService {
   private userIdentity: Account | null = null;
   private authenticationState = new ReplaySubject<Account | null>(1);
-  private accountCache$?: Observable<Account> | null;
+  private accountCache$?: Observable<Account | null> | null;
 
   constructor(
     private translateService: TranslateService,
@@ -52,13 +52,13 @@ export class AccountService {
   identity(force?: boolean): Observable<Account | null> {
     if (!this.accountCache$ || force) {
       this.accountCache$ = this.fetch().pipe(
-        tap((account: Account) => {
+        tap((account: Account | null) => {
           this.authenticate(account);
 
           // After retrieve the account info, the language will be changed to
           // the user's preferred language configured in the account setting
           // unless user have choosed other language in the current session
-          if (!this.sessionStorageService.retrieve('locale')) {
+          if (account && !this.sessionStorageService.retrieve('locale')) {
             this.translateService.use(account.langKey);
           }
 
@@ -78,22 +78,28 @@ export class AccountService {
     return this.authenticationState.asObservable();
   }
 
-  //
-  private fetch(): Observable<Account> {
-    return new Observable(observer => {
-      this.keycloakService.loadUserProfile().then(profile => {
-        const account: Account = {
-          activated: profile.emailVerified === true,
-          authorities: this.keycloakService.getUserRoles(),
-          email: String(profile.email),
-          firstName: String(profile.firstName),
-          langKey: 'en',
-          lastName: String(profile.lastName),
-          login: String(profile.username),
-          imageUrl: null,
-        };
-        observer.next(account);
-        observer.complete();
+  private fetch(): Observable<Account | null> {
+    return new Observable<Account | null>(observer => {
+      this.keycloakService.isLoggedIn().then(isLoggedIn => {
+        if (!isLoggedIn) {
+          observer.next(null);
+          observer.complete();
+        } else {
+          this.keycloakService.loadUserProfile().then(profile => {
+            const account: Account = {
+              activated: profile.emailVerified === true,
+              authorities: this.keycloakService.getUserRoles(),
+              email: String(profile.email),
+              firstName: String(profile.firstName),
+              langKey: 'en',
+              lastName: String(profile.lastName),
+              login: String(profile.username),
+              imageUrl: null,
+            };
+            observer.next(account);
+            observer.complete();
+          });
+        }
       });
     });
   }

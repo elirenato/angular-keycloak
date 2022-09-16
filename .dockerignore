@@ -1,0 +1,3 @@
+*
+!target/classes/static
+!src/main/docker/nginx.conf
