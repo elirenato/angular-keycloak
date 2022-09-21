@@ -39,6 +39,7 @@ function mockKeycloakService(authorities: string[]): KeycloakService {
   };
   const keycloakService = TestBed.inject(KeycloakService);
   jest.spyOn(keycloakService, 'loadUserProfile').mockReturnValue(Promise.resolve(keycloakProfile));
+  jest.spyOn(keycloakService, 'isLoggedIn').mockReturnValue(Promise.resolve(true));
   jest.spyOn(keycloakService, 'getUserRoles').mockReturnValue(authorities);
   return keycloakService;
 }
@@ -128,7 +129,7 @@ describe('Account Service', () => {
       // Once more
       service.identity().subscribe();
       // Then there is only request
-      expect(keycloakService.loadUserProfile).toBeCalledTimes(1);
+      expect(keycloakService.isLoggedIn).toBeCalledTimes(1);
     });
 
     it('should call /account only once if not logged out after first authentication and should call /account again if user has logged out', () => {
@@ -143,7 +144,7 @@ describe('Account Service', () => {
       service.identity().subscribe();
 
       // Then there is a new request
-      expect(keycloakService.loadUserProfile).toBeCalledTimes(2);
+      expect(keycloakService.isLoggedIn).toBeCalledTimes(2);
     });
 
     describe('should change the language on authentication if necessary', () => {

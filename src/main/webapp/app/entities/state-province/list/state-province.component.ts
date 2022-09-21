@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { combineLatest, Observable, switchMap, tap } from 'rxjs';
 
-import { CountryService } from '../../country/service/country.service'
+import { CountryService } from '../../country/service/country.service';
 import { ICountry } from '../../country/country.model';
 import { IStateProvince } from '../state-province.model';
 import { ASC, DESC, SORT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
@@ -16,7 +16,7 @@ import { SortService } from 'app/shared/sort/sort.service';
 export class StateProvinceComponent implements OnInit {
   countryID: number | null = null;
   countries: ICountry[] = [];
-  stateProvinces?: IStateProvince[];
+  stateProvinces?: IStateProvince[] | null;
   isLoading = false;
 
   predicate = 'id';
@@ -60,7 +60,8 @@ export class StateProvinceComponent implements OnInit {
     this.predicate = sort[0];
     this.ascending = sort[1] === ASC;
     const country = params.get('country');
-    this.countryID =  country ? Number(country) : null;
+    this.countryID = country ? Number(country) : null;
+    this.stateProvinces = null;
   }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
@@ -77,17 +78,21 @@ export class StateProvinceComponent implements OnInit {
   }
 
   protected queryBackend(): Observable<EntityArrayResponseType> {
-    this.isLoading = true;
-    const queryObject = {
-      country: this.countryID
-    };
-    return this.stateProvinceService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+    if (this.countryID) {
+      this.isLoading = true;
+      const queryObject = {
+        country: this.countryID,
+      };
+      return this.stateProvinceService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+    } else {
+      return new Observable<EntityArrayResponseType>();
+    }
   }
 
   protected handleNavigation(predicate?: string, ascending?: boolean): void {
     const queryParamsObj = {
       sort: this.getSortQueryParam(predicate, ascending),
-      country: this.countryID
+      country: this.countryID,
     };
 
     this.router.navigate(['./'], {
@@ -112,7 +117,7 @@ export class StateProvinceComponent implements OnInit {
         if (this.countryID) {
           this.loadStateProvinces();
         }
-      }
+      },
     });
   }
 
