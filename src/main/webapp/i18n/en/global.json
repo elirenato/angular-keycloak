@@ -140,7 +140,8 @@
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
-    }
+    },
+    "validationExceptionOnField": "Error on field {{fieldName}}. {{detail}}"
   },
   "footer": "The frontend of this application was bootstrapped with "
 }

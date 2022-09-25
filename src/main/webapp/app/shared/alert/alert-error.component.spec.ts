@@ -111,31 +111,13 @@ describe('Alert Error Component', () => {
           status: 400,
           path: '/api/foos',
           message: 'error.validation',
-          fieldErrors: [{ objectName: 'foo', field: 'minField', message: 'Min' }],
+          errors: [{ path: 'minField', message: 'Min' }],
         },
       });
       eventManager.broadcast({ name: 'angularkeycloakApp.httpError', content: response });
       // THEN
       expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('error.Size');
-    });
-
-    it('Should display an alert on status 400 for error headers', () => {
-      // GIVEN
-      const response = new HttpErrorResponse({
-        url: 'http://localhost:8080/api/foos',
-        headers: new HttpHeaders().append('app-error', 'Error Message').append('app-params', 'foo'),
-        status: 400,
-        statusText: 'Bad Request',
-        error: {
-          status: 400,
-          message: 'error.validation',
-        },
-      });
-      eventManager.broadcast({ name: 'angularkeycloakApp.httpError', content: response });
-      // THEN
-      expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('Error Message');
+      expect(comp.alerts[0].translationKey).toBe('error.validationExceptionOnField');
     });
 
     it('Should display an alert on status 500 with detail', () => {

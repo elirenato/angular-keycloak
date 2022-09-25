@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
-
+import { TranslateService } from '@ngx-translate/core';
 import { ApplicationConfigService } from '../config/application-config.service';
 
 @Injectable()
@@ -10,10 +10,19 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private localStorageService: LocalStorageService,
     private sessionStorageService: SessionStorageService,
-    private applicationConfigService: ApplicationConfigService
+    private applicationConfigService: ApplicationConfigService,
+    private translateService: TranslateService
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (this.translateService.currentLang) {
+      request = request.clone({
+        setHeaders: {
+          'Accept-Language': this.translateService.currentLang,
+        },
+      });
+    }
+
     const serverApiUrl = this.applicationConfigService.getEndpointFor('');
     if (!request.url || (request.url.startsWith('http') && !(serverApiUrl && request.url.startsWith(serverApiUrl)))) {
       return next.handle(request);
