@@ -86,12 +86,17 @@ export class AccountService {
           observer.complete();
         } else {
           this.keycloakService.loadUserProfile().then(profile => {
+            const profileObj: any = profile;
+            let defaultLocale = 'en';
+            if (profileObj?.attributes?.locale && profileObj?.attributes?.locale.length > 0) {
+              defaultLocale = profileObj?.attributes?.locale[0].toLowerCase();
+            }
             const account: Account = {
               activated: profile.emailVerified === true,
               authorities: this.keycloakService.getUserRoles(),
               email: String(profile.email),
               firstName: String(profile.firstName),
-              langKey: 'en',
+              langKey: defaultLocale,
               lastName: String(profile.lastName),
               login: String(profile.username),
               imageUrl: null,

@@ -18,13 +18,14 @@
         "title": "Customer"
       },
       "id": "ID",
-      "firstName": "First Name",
-      "lastName": "Last Name",
+      "firstName": "Nome",
+      "lastName": "Sobrenome",
       "email": "Email",
-      "address": "Address",
-      "address2": "Address 2",
-      "postalCode": "Postal Code",
-      "stateProvince": "State Province"
+      "address": "Endereço",
+      "address2": "Complemento",
+      "postalCode": "CEP",
+      "stateProvince": "Estado",
+      "country": "País"
     }
   }
 }

@@ -10,6 +10,7 @@ import { Account } from 'app/core/auth/account.model';
 
 import { HomeComponent } from './home.component';
 import { KeycloakService } from 'keycloak-angular';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('Home Component', () => {
   let comp: HomeComponent;
@@ -31,9 +32,9 @@ describe('Home Component', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([])],
+      imports: [RouterTestingModule.withRoutes([]), TranslateModule.forRoot()],
       declarations: [HomeComponent],
-      providers: [AccountService, KeycloakService],
+      providers: [AccountService, KeycloakService, TranslateService],
     })
       .overrideTemplate(HomeComponent, '')
       .compileComponents();
